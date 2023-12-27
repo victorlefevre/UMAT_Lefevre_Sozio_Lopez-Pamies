@@ -1,0 +1,85 @@
+*Heading
+Patch test CAX4H VHB4910
+*parameter
+amu1=13.54e-3
+aalpha1=1.0
+amu2=1.08e-3
+aalpha2=-2.474
+akappaE=10000.0*(amu1+amu2)
+am1=5.42e-3
+aa1=-10.
+am2=20.78e-3
+aa2=1.948
+aeta0=7014.0e-3
+aetaI=0.1e-3
+abeta1=1.852
+abeta2=0.26
+aK1=3507e-3
+aK2=1.0e6
+*NODE,NSET=ALLNODES
+1,0.,0.,0.
+2,1.,0.,0.
+3,1.,1.,0.
+4,0.,1.,0.
+*ELEMENT,TYPE=CAX4H,ELSET=UNITSQUARE
+1,1,2,3,4
+*Nset, nset=X1
+ 2, 3
+*Nset, nset=Y1
+ 3, 4
+*Nset, nset=X0
+ 1, 4
+*Nset, nset=Y0
+ 1, 2
+** ----------------------------------------------------------------
+*SOLID SECTION,ELSET=UNITSQUARE,MATERIAL=VHB4910
+*MATERIAL,NAME=VHB4910
+*USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
+**mu1, alpha1, mu2, alpha1, kappaE, m1, a1, m2, 
+** a2, eta0, etainf, beta1, beta2, K1, K2
+<amu1>, <aalpha1>, <amu2>, <aalpha2>, <akappaE>, <am1>, <aa1>, <am2>,
+<aa2>, <aeta0>, <aetaI>, <abeta1>, <abeta2>, <aK1>, <aK2> 
+*DEPVAR
+4
+*USER OUTPUT VARIABLES
+2
+*INITIAL CONDITIONS, TYPE=SOLUTION
+UNITSQUARE,1.0,1.0,1.0,0.0
+** ----------------------------------------------------------------
+*AMPLITUDE, NAME=Amp1
+0.000000,0.000000
+40.000000,2.000000
+80.000000,0.000000
+** ----------------------------------------------------------------
+**
+** STEP: STEP-1
+** 
+*STEP, name=STEP-1, nlgeom=YES, inc=2000
+*Static
+0.5,80.0,0.5, 0.5
+**
+*BOUNDARY
+X0, 1,, 0.0
+Y0, 2,, 0.0
+*BOUNDARY, AMPLITUDE=Amp1
+Y1, 2,,    1.0
+** 
+** OUTPUT REQUESTS
+** 
+*Restart, write, frequency=0
+** 
+** FIELD OUTPUT: F-Output-1
+** 
+
+*Output, field
+*Node Output
+U
+*Element Output
+S, E, UVARM, SDV, SENER, PENER
+** 
+** HISTORY OUTPUT: H-Output-1
+** 
+*Output, history
+*Energy Output
+ALLSE, ALLPD 
+*END STEP

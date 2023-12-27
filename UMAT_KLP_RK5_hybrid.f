@@ -35,14 +35,14 @@
 !**********************************************************************
 ! Usage:
 !
-! The subroutine is to be used as an USER MATERIAL with 15 material 
+! The subroutine is to be used as a USER MATERIAL with 15 material 
 ! CONSTANTS and a TOTAL HYBRID FORMULATION, e.g., 
 ! *USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
 ! in the input (.inp) file. Due to the hybrid nature of the underlying
 ! formulation, hybrid finite elements must be used in the simulation.
 !
-! 1/ The 15 materials properties required by the model to be input to 
-! the subroutine via the PROPS array are listed in order below:
+! 1/ The 15 material properties of the model are inputted into 
+! the subroutine via the PROPS array and are listed in order below:
 !
 !  AMU1    = PROPS(1)  ! PARAMETER #1 OF THE EQUILIBRIUM ELASTICITY
 !  AALPHA1 = PROPS(2)  ! EXPONENT #1 OF THE EQUILIBRIUM ELASTICITY
@@ -62,19 +62,19 @@
 !
 ! The material parameters AMU1, AMU2 characterizing the equilibrium     
 ! elasticity are non-negative real numbers 
-! (AMU1 >= 0, AMU2 >= 0) with strictly positive sum (AMU1 + AMU2 > 0). 
+! (AMU1 ≥ 0, AMU2 ≥ 0) with strictly positive sum (AMU1 + AMU2 > 0). 
 ! The two exponents AALPHA1, AALPHA2 are non-zero real numbers 
 ! (AALPHA1 ≠ 0, AALPHA2 ≠ 0) with MAX{AALPHA1, AALPHA2} > 0 leading to  
 ! a strongly elliptic strain energy (see eq. (22) in [2]). This is left 
 ! to the user to check.
 !
-! The material parameter AKAPPAE charcterizing the compressibility of
+! The material parameter AKAPPAE characterizing the compressibility of
 ! the equilibrium elasticity is a strictly positive real number
 ! (AKAPPAE > 0).
 !
 ! The material parameters AM1, AM2 characterizing the non-equilibrium     
 ! elasticity are non-negative real numbers 
-! (AM1 >= 0, AM2 >= 0) with strictly positive sum (AM1 + AM2 > 0). 
+! (AM1 ≥ 0, AM2 ≥ 0) with strictly positive sum (AM1 + AM2 > 0). 
 ! The two exponents AA1, AA2 are non-zero real numbers 
 ! (AA1 ≠ 0, AA2 ≠ 0) with MAX{AA1, AA2} > 0 leading to a 
 ! strongly elliptic strain energy (see eq. (22) in [2]). This is left 
@@ -82,8 +82,8 @@
 !
 ! The material parameters AETA0, AETAI, ABETA1, ABETA2, AK1, AK2
 ! characterizing the viscous dissipation are all non-negative real  
-! numbers (AETA0 >= 0, AETAI >= 0, ABETA1 >= 0, ABETA2 >= 0, AK1 >= 0,
-! AK2 >= 0).
+! numbers (AETA0 ≥ 0, AETAI ≥ 0, ABETA1 ≥ 0, ABETA2 ≥ 0, AK1 ≥ 0,
+! AK2 ≥ 0).
 !
 ! 2/ The subroutine uses solution-dependent state variables for the
 ! independent components of the symmetric tensorial internal variable 
@@ -98,6 +98,7 @@
 !    CPEG4H, CPEG6H, CPEG8H, ...)
 ! - NSTATV = 6 for elements with all 3 non-zero shear components 
 !   (C3D4H, C3D8H, C3D10H, C3D20H, CGAX3H, CGAX4H, CGAX6H, CGAX8H, ...)
+!
 ! Note that an incorrect value of NSTATV will trigger an error in the 
 ! subroutine and the error message in the .msg file will indicate the 
 ! expected value for NSTATV.
@@ -114,19 +115,53 @@
 ! where ALLELEMENTSET is an element set of all finite elements 
 ! associated with the UMAT material.
 !
-! 4/ The subroutine can create at the user's request a user output 
-! variable UVARM1 for the determinant of the deformation gradient. The 
-! space for the user output variable must be allocated in the input 
+! 4/ The subroutine uses the variable SSE to output psiE = PsiE/J, the  
+! strain energy density per deformed unit volume in the equilibrium 
+! branch. 
+!
+! The corresponding contour plot can be obtained by including the 
+! output variable identifier SENER in the element output request  
+! keyword *ELEMENT OUTPUT. 
+!
+! The corresponding total energy (i.e., the volume internal of SSE) can
+! be obtained by including the output variable identifier ALLSE in the 
+! history output request keyword *ENERGY OUTPUT.
+!
+! 5/ The subroutine uses the variable SPD to output psiNE = PsiNE/J,   
+! the strain energy density per deformed unit volume in the non- 
+! equilibrium branch. Note that this use of the SPD variable is  
+! different from the typical meaning of the SPD variable in UMAT 
+! subroutines, which is the plastic dissipation density.
+!
+! The corresponding contour plot can be obtained by including the
+! output variable identifier PENER in the element output request  
+! keyword *ELEMENT OUTPUT. 
+!
+! The corresponding total energy (i.e., the volume internal of SPD) can
+! be obtained by including the output variable identifier ALLPD in the 
+! history output request keyword *ENERGY OUTPUT. 
+!
+! 6/ Contour plots of the components of the internal variable CVi 
+! can be obtained by including the output variable identifier SDV in 
+! the element output request keyword *ELEMENT OUTPUT. 
+!
+! 7/ A UVARM subroutine is also included to create two user output 
+! variable, UVARM1 = I1 = Tr(FT.F) and UVARM2 = J = Det(F). The 
+! space for these user output variables must be allocated in the input 
 ! file using the *USER OUTPUT VARIABLES keyword:
 ! *USER OUTPUT VARIABLES
-! 1
-! The user must also include UVARM in the field output request.
+! 2
+!
+! The corresponding contour plots can be obtained by including the
+! output variable identifier UVARM in the element output request  
+! keyword *ELEMENT OUTPUT. 
+!
 !**********************************************************************
 ! Additional information:
 !
 ! This subroutine doesn't create predefined field variables. 
 !
-! Please consult the ABAQUS Documentation for additional references 
+! Please consult the Abaqus Documentation for additional references 
 ! regarding the use of the UMAT subroutine for (near-)incompressible
 ! material models.
 !
@@ -134,10 +169,10 @@
 ! References:
 !
 ! [1] Kumar, A., Lopez-Pamies, O., 2016. On the two-potential constitu-
-!     tive modeling of rubber viscoelastic materials, Comptes Rendus
-!     Mecanique 344, 102–-112.
+!     tive modeling of rubber viscoelastic materials. Comptes Rendus
+!     Mécanique 344, 102–-112.
 ! [2] Lopez-Pamies, O., 2010. A new I1-based hyperelastic model for 
-!     rubber elastic materials. C. R. Mec. 338, 3--11.
+!     rubber elastic materials. Comptes Rendus Mécanique 338, 3--11.     
 ! [3] Lefèvre, V., Sozio, F., Lopez-Pamies, O., 2023. Abaqus implemen-
 !     tation of a large family of finite viscoelasticity models.
 !     Submitted.
@@ -177,6 +212,10 @@ C             MUST BE UPDATED TO CVI AT THE END OF THE INCREMENT.
 C             COMPONENTS STORED AS CVI_11, CVI_22, CVI_33, CVI_12
 C             WHEN NSTATV=4, AND AS CVI_11, CVI_22, CVI_33, CVI_12, 
 C             CVI_13, CVI_23 WHEN NSTATV=6.
+C    SSE    - USED TO OUTPUT THE STRAIN ENERGY DENSITY PER UNIT 
+C             DEFORMED VOLUME IN THE EQUILIBIRUM BRANCH
+C    SPD    - USED TO OUTPUT THE STRAIN ENERGY DENSITY PER UNIT 
+C             DEFORMED VOLUME IN THE NON-EQUILIBIRUM BRANCH
 C ---------------------------------------------------------------------
 C
 C    IMPORTANT LOCAL VARIABLES:
@@ -240,7 +279,7 @@ C
       ALLOCATE(RKKS(NTENS,NRK), RKAIJS(NRK,NRK), RKBIS(NRK), RKCIS(NRK))
 C
       IF ((KSTEP.EQ.1).AND.(KINC.EQ.1)) THEN
-        CALL KCHECKS(STATEV, NSTATV, NTENS, PROPS, NPROPS)
+        CALL KUMATCHECKS(STATEV, NSTATV, NTENS, PROPS, NPROPS)
       END IF
 C ---------------------------------------------------------------------
 C
@@ -348,6 +387,20 @@ C
       AA1     = PROPS(7)  
       AM2     = PROPS(8)  
       AA2     = PROPS(9)  
+C
+C ENERGY DENSITIES
+C
+      PSIE = (3**(1-AALPHA1))/(2.0*AALPHA1)*
+     1       (AI1B**AALPHA1-3.0**AALPHA1)*AMU1 +
+     2       (3**(1-AALPHA2))/(2.0*AALPHA2)*
+     3       (AI1B**AALPHA2-3.0**AALPHA2)*AMU2 + 
+     4       AKAPPAE/2.0*(DETF-1.0)**2.0
+      SSE = PSIE/DETF
+      PSINE = (3**(1-AA1))/(2.0*AA1)*
+     1        (AI1BE**AA1-3.0**AA1)*AM1 +
+     2        (3**(1-AA2))/(2.0*AA2)*
+     3        (AI1BE**AA2-3.0**AA2)*AM2
+      SPD = PSINE/DETF
 C
 C 1ST and 2ND DERIVATIVES OF EQUILIBRIUM ELASTICITY
 C                                 
@@ -789,13 +842,13 @@ C
 C
 C***********************************************************************
 C
-      SUBROUTINE KCHECKS(STATEV, NSTATV, NTENS, PROPS, NPROPS)
+      SUBROUTINE KUMATCHECKS(STATEV, NSTATV, NTENS, PROPS, NPROPS)
 C  
       IMPLICIT DOUBLE PRECISION (A-H, O-Z)
 #INCLUDE <SMAASPUSERSUBROUTINES.HDR>  
       DIMENSION STATEV(NSTATV), PROPS(NPROPS)
 C
-C     PERFORMS CHECKS ON THE INPUT TO THE SUBROUTINE
+C     PERFORMS CHECKS ON THE INPUT TO THE UMAT SUBROUTINE
 C
 C
 C     STDB_ABQERR AND GET_THREAD_ID INITIALIZATION
@@ -1157,13 +1210,60 @@ C
       DIMENSION UVAR(NUVARM),DIRECT(3,3),T(3,3),TIME(2)
       DIMENSION ARRAY(15),JARRAY(15),JMAC(*),JMATYP(*),COORD(*)
 C
-C     USER OUTPUT VARIABLE FOR THE DETERMINANT OF THE DEFORMATION 
-C     GRADIENT
-C      
+C     USER OUTPUT VARIABLES
+C     UVAR(1) = UVARM1 = I1 = TR(FT.F)
+C     UVAR(2) = UVARM2 = DET(F)
+C            
+      IF ((KSTEP.EQ.1).AND.(KINC.EQ.1)) THEN
+        CALL KUVARMCHECKS(NUVARM,2)    
+      END IF 
       CALL GETVRM('DGP',ARRAY,JARRAY,FLGRAY,JRCD,JMAC,JMATYP,
-     1 MATLAYO,LACCFLA)
-      DETF=ARRAY(1)*ARRAY(2)*ARRAY(3)
-      UVAR(1) = DETF
+     1 MATLAYO,LACCFLA)     
+      UVAR(1) = ARRAY(1)**2.0 + ARRAY(2)**2.0 + ARRAY(3)**2.0
+      UVAR(2) = ARRAY(1)*ARRAY(2)*ARRAY(3)
 C
       RETURN
       END
+C
+C***********************************************************************
+C
+      SUBROUTINE KUVARMCHECKS(NUVARMINPUT,NUVARMEXPECTED)
+C  
+      IMPLICIT DOUBLE PRECISION (A-H, O-Z)
+#INCLUDE <SMAASPUSERSUBROUTINES.HDR>  
+C
+C     PERFORMS CHECKS ON THE INPUT TO THE UVARM SUBROUTINE
+C
+C
+C     STDB_ABQERR AND GET_THREAD_ID INITIALIZATION
+C
+      DIMENSION INTV(1),REALV(1)
+      CHARACTER*8 CHARV(1)
+      CHARACTER*100 STRING1, STRING2, STRING3
+      CHARACTER*500 STRING
+C      
+      INTEGER MYTHREADID  
+C      
+      INTV(1)=0
+      INTV(2)=0
+      REALV(1)=0.
+      CHARV(1)=''
+C
+      MYTHREADID = GET_THREAD_ID()
+C
+C     INPUT CHECKS
+C   
+      IF (MYTHREADID.EQ.0) THEN
+        IF (NUVARMINPUT.NE.NUVARMEXPECTED) THEN  
+          INTV(1)=NUVARMINPUT
+          INTV(2)=NUVARMEXPECTED
+          STRING1='RECEIVED NUVARM = %I BUT NUVARM SHOULD BE EQUAL TO'
+          STRING2='%I. UPDATE *USER OUTPUT VARIABLES KEYWORD IN THE'
+          STRING3='INPUT FILE.'
+          STRING = TRIM(STRING1) // ' ' // TRIM(STRING2) // ' ' // 
+     1             TRIM(STRING3)
+          CALL STDB_ABQERR(-3,STRING,INTV,REALV,CHARV)
+        END IF
+      END IF          
+      RETURN
+      END       
