@@ -1,0 +1,79 @@
+*Heading
+Patch test C3D8H nearly-incompressible viscoelastic elastomer
+**Units: mm, s, N, MPa
+*NODE,NSET=ALLNODES
+      1,           1.,           1.,           1.
+      2,           1.,           0.,           1.
+      3,           1.,           1.,           0.
+      4,           1.,           0.,           0.
+      5,           0.,           1.,           1.
+      6,           0.,           0.,           1.
+      7,           0.,           1.,           0.
+      8,           0.,           0.,           0.
+*Element, type=C3D8H, ELSET=UNITCUBE
+1, 5, 6, 8, 7, 1, 2, 4, 3
+*Nset, nset=X1
+ 1, 2, 3, 4
+*Nset, nset=Y1
+ 1, 3, 5, 7
+*Nset, nset=Z1
+ 1, 2, 5, 6
+*Nset, nset=X0
+ 5, 6, 7, 8
+*Nset, nset=Y0
+ 2, 4, 6, 8
+*Nset, nset=Z0
+ 3, 4, 7, 8
+** ----------------------------------------------------------------
+*SOLID SECTION,ELSET=UNITCUBE,MATERIAL=NearIncompViscoElast
+*MATERIAL,NAME=NearIncompViscoElast
+*USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
+**mu1, alpha1, mu2, alpha1, kappaE, m1, a1, m2, 
+** a2, eta0, etainf, beta1, beta2, K1, K2
+13.54e-3, 1.0, 1.08e-3, -2.474, 14.62e1, 5.42e-3, -10.0, 20.78e-3,
+1.948, 7014.0e-3, 0.1e-3, 1.852, 0.26, 3507e-3, 1.0e6 
+*DEPVAR
+6
+*USER OUTPUT VARIABLES
+2
+*INITIAL CONDITIONS, TYPE=SOLUTION
+UNITCUBE,1.0,1.0,1.0,0.0,0.0,0.0
+** ----------------------------------------------------------------
+*AMPLITUDE, NAME=Amp1
+0.000000,0.000000
+40.000000,2.000000
+80.000000,0.000000
+** ----------------------------------------------------------------
+**
+** STEP: STEP-1
+** 
+*STEP, name=STEP-1, nlgeom=YES, inc=2000
+*Static
+0.5,80.0,0.5, 0.5
+**
+*BOUNDARY
+X0, 1,, 0.0
+Y0, 2,, 0.0
+Z0,  3,, 0.0
+*BOUNDARY, AMPLITUDE=Amp1
+Z1, 3,,    1.0
+** 
+** OUTPUT REQUESTS
+** 
+*Restart, write, frequency=0
+** 
+** FIELD OUTPUT: F-Output-1
+** 
+
+*Output, field
+*Node Output
+U
+*Element Output
+S, E, UVARM, SDV, SENER, PENER
+** 
+** HISTORY OUTPUT: H-Output-1
+** 
+*Output, history
+*Energy Output
+ALLSE, ALLPD 
+*END STEP

@@ -1,0 +1,70 @@
+*Heading
+Patch test CPE4H highly compressible viscoelastic elastomer
+**Units: mm, s, N, MPa
+*NODE,NSET=ALLNODES
+1,0.,0.,0.
+2,1.,0.,0.
+3,1.,1.,0.
+4,0.,1.,0.
+*ELEMENT,TYPE=CPE4H,ELSET=UNITSQUARE
+1,1,2,3,4
+*Nset, nset=X1
+ 2, 3
+*Nset, nset=Y1
+ 3, 4
+*Nset, nset=X0
+ 1, 4
+*Nset, nset=Y0
+ 1, 2
+** ----------------------------------------------------------------
+*SOLID SECTION,ELSET=UNITSQUARE,MATERIAL=CompViscoElast
+*MATERIAL,NAME=CompViscoElast
+*USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
+**mu1, alpha1, mu2, alpha1, kappaE, m1, a1, m2, 
+** a2, eta0, etainf, beta1, beta2, K1, K2
+13.54e-3, 1.0, 1.08e-3, -2.474, 14.62e-3, 5.42e-3, -10.0, 20.78e-3,
+1.948, 7014.0e-3, 0.1e-3, 1.852, 0.26, 3507e-3, 1.0e6 
+*DEPVAR
+4
+*USER OUTPUT VARIABLES
+2
+*INITIAL CONDITIONS, TYPE=SOLUTION
+UNITSQUARE,1.0,1.0,1.0,0.0
+** ----------------------------------------------------------------
+*AMPLITUDE, NAME=Amp1
+0.000000,0.000000
+40.000000,2.000000
+80.000000,0.000000
+** ----------------------------------------------------------------
+**
+** STEP: STEP-1
+** 
+*STEP, name=STEP-1, nlgeom=YES, inc=2000
+*Static
+0.5,80.0,0.5, 0.5
+**
+*BOUNDARY
+X0, 1,, 0.0
+Y0, 2,, 0.0
+*BOUNDARY, AMPLITUDE=Amp1
+Y1, 2,,    1.0
+** 
+** OUTPUT REQUESTS
+** 
+*Restart, write, frequency=0
+** 
+** FIELD OUTPUT: F-Output-1
+** 
+
+*Output, field
+*Node Output
+U
+*Element Output
+S, E, UVARM, SDV, SENER, PENER
+** 
+** HISTORY OUTPUT: H-Output-1
+** 
+*Output, history
+*Energy Output
+ALLSE, ALLPD 
+*END STEP
