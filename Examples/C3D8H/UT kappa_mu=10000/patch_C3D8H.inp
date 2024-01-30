@@ -1,22 +1,7 @@
 *Heading
-Patch test C3D8H VHB4910
-*parameter
-amu1=13.54e-3
-aalpha1=1.0
-amu2=1.08e-3
-aalpha2=-2.474
-akappaE=10000.0*(amu1+amu2)
-am1=5.42e-3
-aa1=-10.
-am2=20.78e-3
-aa2=1.948
-aeta0=7014.0e-3
-aetaI=0.1e-3
-abeta1=1.852
-abeta2=0.26
-aK1=3507e-3
-aK2=1.0e6
-*Node, NSET=ALLNODES
+Patch test C3D8H nearly-incompressible viscoelastic elastomer
+**Units: mm, s, N, MPa
+*NODE,NSET=ALLNODES
       1,           1.,           1.,           1.
       2,           1.,           0.,           1.
       3,           1.,           1.,           0.
@@ -40,13 +25,13 @@ aK2=1.0e6
 *Nset, nset=Z0
  3, 4, 7, 8
 ** ----------------------------------------------------------------
-*SOLID SECTION,ELSET=UNITCUBE,MATERIAL=VHB4910
-*MATERIAL,NAME=VHB4910
+*SOLID SECTION,ELSET=UNITCUBE,MATERIAL=NearIncompViscoElast
+*MATERIAL,NAME=NearIncompViscoElast
 *USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
 **mu1, alpha1, mu2, alpha1, kappaE, m1, a1, m2, 
 ** a2, eta0, etainf, beta1, beta2, K1, K2
-<amu1>, <aalpha1>, <amu2>, <aalpha2>, <akappaE>, <am1>, <aa1>, <am2>,
-<aa2>, <aeta0>, <aetaI>, <abeta1>, <abeta2>, <aK1>, <aK2> 
+13.54e-3, 1.0, 1.08e-3, -2.474, 14.62e1, 5.42e-3, -10.0, 20.78e-3,
+1.948, 7014.0e-3, 0.1e-3, 1.852, 0.26, 3507e-3, 1.0e6 
 *DEPVAR
 6
 *USER OUTPUT VARIABLES
@@ -54,7 +39,7 @@ aK2=1.0e6
 *INITIAL CONDITIONS, TYPE=SOLUTION
 UNITCUBE,1.0,1.0,1.0,0.0,0.0,0.0
 ** ----------------------------------------------------------------
-*AMPLITUDE, NAME=AmpF33
+*AMPLITUDE, NAME=Amp1
 0.000000,0.000000
 40.000000,2.000000
 80.000000,0.000000
@@ -70,7 +55,7 @@ UNITCUBE,1.0,1.0,1.0,0.0,0.0,0.0
 X0, 1,, 0.0
 Y0, 2,, 0.0
 Z0,  3,, 0.0
-*BOUNDARY, AMPLITUDE=AmpF33
+*BOUNDARY, AMPLITUDE=Amp1
 Z1, 3,,    1.0
 ** 
 ** OUTPUT REQUESTS

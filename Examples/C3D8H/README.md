@@ -8,7 +8,7 @@ Examples for a highly compressible viscoelastic elastomer ($\kappa=\mu$) and for
 
 ## Folder naming convention
 
-Folders containing the examples are named according to the applied loading (EBT: equi-biaxial tension, PT: planar tension, UT: uniaxial tension) and the compressibility of the material (kappa_mu=1: highly compressible, kappa_mu=10000, nearly-incompressible)
+Folders containing the examples are named according to the applied loading (EBT: equi-biaxial tension, PT: planar tension, UT: uniaxial tension) and the compressibility of the material (kappa_mu=1: highly compressible, kappa_mu=10000: nearly-incompressible)
 
 ## Usage
 

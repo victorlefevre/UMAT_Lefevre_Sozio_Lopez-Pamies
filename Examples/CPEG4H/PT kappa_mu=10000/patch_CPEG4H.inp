@@ -1,21 +1,6 @@
 *Heading
-Patch test CPEG4H VHB4910
-*parameter
-amu1=13.54e-3
-aalpha1=1.0
-amu2=1.08e-3
-aalpha2=-2.474
-akappaE=10000.0*(amu1+amu2)
-am1=5.42e-3
-aa1=-10.
-am2=20.78e-3
-aa2=1.948
-aeta0=7014.0e-3
-aetaI=0.1e-3
-abeta1=1.852
-abeta2=0.26
-aK1=3507e-3
-aK2=1.0e6
+Patch test CPEG4H nearly-incompressible viscoelastic elastomer
+**Units: mm, s, N, MPa
 *NODE,NSET=ALLNODES
 1,0.,0.,0.
 2,1.,0.,0.
@@ -34,13 +19,13 @@ aK2=1.0e6
 *Nset, nset=Y0
  1, 2
 ** ----------------------------------------------------------------
-*SOLID SECTION,ELSET=UNITSQUARE,MATERIAL=VHB4910, REF NODE=10
-*MATERIAL,NAME=VHB4910
+*SOLID SECTION,ELSET=UNITSQUARE,MATERIAL=NearIncompViscoElast, REF NODE=10
+*MATERIAL,NAME=NearIncompViscoElast
 *USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
 **mu1, alpha1, mu2, alpha1, kappaE, m1, a1, m2, 
 ** a2, eta0, etainf, beta1, beta2, K1, K2
-<amu1>, <aalpha1>, <amu2>, <aalpha2>, <akappaE>, <am1>, <aa1>, <am2>,
-<aa2>, <aeta0>, <aetaI>, <abeta1>, <abeta2>, <aK1>, <aK2> 
+13.54e-3, 1.0, 1.08e-3, -2.474, 14.62e1, 5.42e-3, -10.0, 20.78e-3,
+1.948, 7014.0e-3, 0.1e-3, 1.852, 0.26, 3507e-3, 1.0e6 
 *DEPVAR
 4
 *USER OUTPUT VARIABLES

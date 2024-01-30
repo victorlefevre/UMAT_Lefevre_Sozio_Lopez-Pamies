@@ -50,7 +50,7 @@ The two exponents `AA1`, `AA2` are non-zero real numbers (`AA1` ≠ 0, `AA2` ≠
 The material parameters `AETA0`, `AETAI`, `ABETA1`, `ABETA2`, `AK1`, `AK2` characterizing the viscous dissipation are all non-negative real numbers (`AETA0` ≥ 0, `AETAI` ≥ 0, `ABETA1` ≥ 0, `ABETA2` ≥ 0, `AK1` ≥ 0, `AK2` ≥ 0).
 
 ### Solution-dependent state variables
-- The [subroutine](UMAT_KLP_RK5_hybrid.f) uses solution-dependent state variables for the independent components of the symmetric tensorial internal variable ${\bold C}^{v-1}$. The space for the state variables must be allocated in the input file using the `*DEPVAR` keyword:
+- The [subroutine](UMAT_KLP_RK5_hybrid.f) uses solution-dependent state variables for the independent components of the symmetric tensorial internal variable ${\mathbf{C}}^{v-1}$. The space for the state variables must be allocated in the input file using the `*DEPVAR` keyword:
     ```
     *DEPVAR
     NSTATV
@@ -64,7 +64,7 @@ The material parameters `AETA0`, `AETAI`, `ABETA1`, `ABETA2`, `AK1`, `AK2` chara
 
     Note that an incorrect value of `NSTATV` will trigger an error in the subroutine and the error message in the .msg file will indicate the expected value for `NSTATV`.
 
-- The values of state variables must be initialized according to the initial condition ${\bold C}^{v-1}={\bold I}$ using the `*INITIAL CONDITIONS` keyword as follows:
+- The values of state variables must be initialized according to the initial condition ${\mathbf{C}}^{v-1}={\mathbf{I}}$ using the `*INITIAL CONDITIONS` keyword as follows:
     - `NSTATV` = 4: 
         ```
         *INITIAL CONDITIONS, TYPE=SOLUTION
@@ -92,9 +92,9 @@ The material parameters `AETA0`, `AETAI`, `ABETA1`, `ABETA2`, `AK1`, `AK2` chara
     The corresponding total energy (i.e., the volume internal of `SPD`) can be obtained by including the output variable identifier `ALLPD` in the history output request keyword `*ENERGY OUTPUT`. 
 
 ### Contour plots
-- Contour plots of the components of the internal variable ${\bold C}^{v-1}$ can be obtained by including the output variable identifier `SDV` in the element output request keyword `*ELEMENT OUTPUT`. 
+- Contour plots of the components of the internal variable ${\mathbf{C}}^{v-1}$ can be obtained by including the output variable identifier `SDV` in the element output request keyword `*ELEMENT OUTPUT`. 
 
-- A UVARM subroutine is also included to create two user output variable, `UVARM1` = $I_1$ = $\text{tr}({\bold F}^T{\bold F})$ and `UVARM2` = $J$ = $\text{det(F)}$. The space for these user output variables must be allocated in the input file using the `*USER OUTPUT VARIABLES` keyword:
+- A UVARM subroutine is also included to create two user output variable, `UVARM1` = $I_1$ = $\text{tr}({\mathbf{F}}^T{\mathbf{F}})$ and `UVARM2` = $J$ = $\text{det(F)}$. The space for these user output variables must be allocated in the input file using the `*USER OUTPUT VARIABLES` keyword:
     ```
     *USER OUTPUT VARIABLES
     2
@@ -106,6 +106,10 @@ The material parameters `AETA0`, `AETAI`, `ABETA1`, `ABETA2`, `AK1`, `AK2` chara
 - This [subroutine](UMAT_KLP_RK5_hybrid.f) doesn't create predefined field variables. 
 - Please consult the Abaqus Documentation for additional references regarding the use of the UMAT subroutine for (near-)incompressible material models.
 
+## Documented errors
+- The line `#INCLUDE <SMAASPUSERSUBROUTINES.HDR>`, which appears twice in the code (lines 848 and 1235), has generated errors on some versions of Abaqus, but not on others. If the line generates an error, you can comment it out by including the character `C` as the first character of the line. It is expected that the code will work after this modification.  
+
+
 ## Examples
 The [Examples](Examples) folder contains examples of how to use the present [subroutine](UMAT_KLP_RK5_hybrid.f).
 
@@ -114,4 +118,4 @@ The references below can be found in the [References](References) folder.
 
 1. Kumar, A., Lopez-Pamies, O., 2016. [On the two-potential constitutive modeling of rubber viscoelastic materials](http://pamies.cee.illinois.edu/Publications_files/CRM_2016.pdf). *Comptes Rendus Mécanique* 344, 102–112. 
 2. Lopez-Pamies, O., 2010. [A new I1-based hyperelastic model for rubber elastic materials](http://pamies.cee.illinois.edu/Publications_files/CMAME2019.pdf). *Comptes Rendus Mécanique* 338, 3–11.
-3. Lefèvre, V., Sozio, F., Lopez-Pamies, O., 2023. [Abaqus implementation of a large family of finite viscoelasticity models](https://arxiv.org/pdf/2311.13751.pdf). Submitted.
+3. Lefèvre, V., Sozio, F., Lopez-Pamies, O., 2024. [Abaqus implementation of a large family of finite viscoelasticity models](http://pamies.cee.illinois.edu/Publications_files/FINEL_2024.pdf). *Finite Elements in Analysis and Design* 232, 104114.

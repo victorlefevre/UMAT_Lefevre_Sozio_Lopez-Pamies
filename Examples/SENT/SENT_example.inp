@@ -1,0 +1,67 @@
+*HEADING
+ SINGLE-EDGE NOTCH TENSION - VISCOELASTIC
+*PARAMETER
+stretchrate = 0.05
+maxstretch = 2.0
+** Material parameters
+amu1 = 1.0
+aalpha1 = 1.0
+amu2 = 0.0
+aalpha2 = 1.0
+am1 = 2.0
+aa1 = 1.0
+am2 = 0.0
+aa2 = 1.0
+aeta0 = 1.0
+aetaI = 1.0
+abeta1 = 1.0
+abeta2 = 1.0
+aK1 = 0.0
+aK2 = 0.0
+akappaE=1e6*(amu1+amu2)
+**
+maxdispl = (maxstretch-1)*7.5
+tfinal = (maxstretch-1)/stretchrate
+tinterval = tfinal/10
+dtmax = aeta0/am1/1000/stretchrate
+dtmin = dtmax/100
+**
+** Mesh
+*INCLUDE, INPUT=2D_single_edge_notch.inp
+**
+** Material
+*SOLID SECTION, ELSET=Part, MATERIAL=viscoelastic, REF NODE=REFNODE
+*MATERIAL,NAME=viscoelastic
+*USER MATERIAL,CONSTANTS=15,HYBRID FORMULATION=TOTAL
+<amu1>, <aalpha1>, <amu2>, <aalpha2>, <akappaE>, <am1>, <aa1>, <am2>,
+<aa2>, <aeta0>, <aetaI>, <abeta1>, <abeta2>, <aK1>, <aK2> 
+*DEPVAR
+4
+*USER OUTPUT VARIABLES
+2
+*INITIAL CONDITIONS, TYPE=SOLUTION
+Part,1.0,1.0,1.0,0.0
+**
+** LOADING
+*STEP, name=STEP-1, nlgeom=YES, inc=20000
+*STATIC
+<dtmax>, <tfinal>, <dtmin>, <dtmax>
+*AMPLITUDE, NAME=Amp
+0.000000,0.000000
+<tfinal>,<maxdispl>
+*BOUNDARY, AMPLITUDE=Amp
+REFNODE, 4,5, 0.0
+CrossY, 2,, 0.0
+Top, 1,, 0.0
+Top, 2,, 1.0
+** 
+** OUTPUT REQUESTS
+*OUTPUT, FIELD, TIME INTERVAL=<tinterval>
+*NODE OUTPUT
+U,RF
+*ELEMENT OUTPUT
+S, E, UVARM, SDV, SENER, PENER
+*OUTPUT, HISTORY, TIME INTERVAL=<tinterval>
+*ENERGY OUTPUT
+ALLIE, ALLSE, ALLPD
+*END STEP

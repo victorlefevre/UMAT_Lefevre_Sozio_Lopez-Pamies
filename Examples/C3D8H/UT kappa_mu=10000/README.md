@@ -16,5 +16,7 @@ A Python script `comparison.py` is included to post-process the finite-element s
 abaqus cae -script=comparison.py
 ```
 The script generates and saves .png files of the stress-strain plot and the plot of the strain energies (per deformed unit volume) in the equilibrium (psiE) and non-equilibrium (psiNE) branches:
+
 ![Stress vs strain](S33%20vs%20LE33.png)
+
 ![Energy densities](psis%20vs%20t.png)
